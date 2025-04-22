@@ -50,3 +50,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+**/.cache/
+**/rootfs/
+compile_commands.json
+*.img
+*.dtb
+*.tar.zst
+*.tar.gz
