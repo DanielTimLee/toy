@@ -7,12 +7,14 @@
 #include <linux/timer.h>
 #include "common.h"
 
+int entry_cnt = 1000;
 int log_level = LOG_INFO;
 static int reader_cnt = 4;
 static int writer_cnt = 2;
 static int runner_cnt = 1;
 static int duration_ms = 3000; // ms
 
+module_param(entry_cnt, int, 0644);
 module_param(log_level, int, 0644);
 module_param(runner_cnt, int, 0644);
 module_param(reader_cnt, int, 0644);
@@ -20,12 +22,14 @@ module_param(writer_cnt, int, 0644);
 module_param(duration_ms, int, 0644);
 
 extern struct bench_suite suite1_lock_tests;
-struct bench_suite *suites[] = { &suite1_lock_tests };
+extern struct bench_suite suite2_ds_tests;
+struct bench_suite *suites[] = { &suite1_lock_tests, &suite2_ds_tests };
+/* struct bench_suite *suites[] = { &suite2_ds_tests }; */
 
 static void bench_single_test(struct bench_test *test)
 {
-	log_info("Starting %s test (%d ms, Runner: %d)\n", test->name,
-		 duration_ms, runner_cnt);
+	log_info("Starting %s test (%d ms, %d entry, Runner: %d)\n", test->name,
+		 duration_ms, entry_cnt, runner_cnt);
 
 	run_single_test(test, duration_ms, runner_cnt);
 }

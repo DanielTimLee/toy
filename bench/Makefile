@@ -4,8 +4,8 @@ bench-objs := \
 	main.o \
 	stat.o \
 	test.o \
-	suite/lock.o
-	# suite/lock.o \
+	suite/lock.o \
+	suite/ds.o
 	# suite/structure.o \
 	# suite/combo.o \
 	# suite/scaling.o \

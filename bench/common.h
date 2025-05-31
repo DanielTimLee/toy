@@ -2,11 +2,13 @@
 #ifndef _BENCH_COMMON_H_
 #define _BENCH_COMMON_H_
 
+#include <linux/rhashtable.h>
 #include <linux/completion.h>
 #include <linux/ktime.h>
 
 #define NAME_LEN 32
 
+extern int entry_cnt;
 extern int log_level;
 enum LOG_LEVEL { LOG_INFO = 0, LOG_DEBUG, LOG_VERBOSE };
 
@@ -49,7 +51,7 @@ struct bench_result {
 };
 
 // BENCH : task < test < suite
-enum bench_unit_type { BENCH_LOCK };
+enum bench_unit_type { BENCH_LOCK, BENCH_DS };
 struct bench_unit {
 	enum bench_unit_type type;
 	void *priv;
@@ -101,15 +103,16 @@ int run_parallel_test(struct bench_test *test, int duration_ms, int reader_cnt,
 		      int writer_cnt);
 void overhead_test(void);
 
-#define ENTRY_CNT 1000
+#define MAX_ENTRY 1000000
 
 struct data_entry {
+	struct rhash_head ht_node;
+	struct hlist_node hlist;
 	struct list_head list;
 	struct rcu_head rcu; // RCU async cleanup
-	void *priv;
 	u64 key;
-	// 64 - (16 + 16 + 8) = 24B padding inserted
-	u64 val __aligned(64);
+	u64 bit_index;
+	u64 val;
 } __aligned(64);
 
 void init_cache(void);

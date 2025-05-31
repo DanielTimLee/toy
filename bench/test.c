@@ -12,7 +12,7 @@
 enum bench_flags { BENCH_START = BIT(1), BENCH_STOP = BIT(2) };
 atomic_t bench_ctrl = ATOMIC_INIT(0);
 
-struct data_entry *entries[ENTRY_CNT];
+struct data_entry *entries[MAX_ENTRY];
 struct kmem_cache *entry_cache;
 
 static int do_bench_test(void *kthread_data)
@@ -226,7 +226,7 @@ void init_cache(void)
 
 void init_entries(void)
 {
-	for (int i = 0; i < ENTRY_CNT; ++i) {
+	for (int i = 0; i < entry_cnt; ++i) {
 		entries[i] = kmem_cache_zalloc(entry_cache, GFP_KERNEL);
 		entries[i]->key = i;
 	}
@@ -234,7 +234,7 @@ void init_entries(void)
 
 void cleanup_entries(void)
 {
-	for (int i = 0; i < ENTRY_CNT; ++i) {
+	for (int i = 0; i < entry_cnt; ++i) {
 		if (entries[i]) {
 			kmem_cache_free(entry_cache, entries[i]);
 			entries[i] = NULL;

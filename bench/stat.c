@@ -65,6 +65,8 @@ struct bench_stat init_bench_stat(struct bench_unit *unit, char *_name)
 {
 	if (unit->type == BENCH_LOCK)
 		return BENCH_STAT_INIT(_name, "Lock", "Work", "Clean");
+	else if (unit->type == BENCH_DS)
+		return BENCH_STAT_INIT(_name, "Insert", "Lookup", "Delete");
 	else
 		return BENCH_STAT_INIT(_name, "Lock", "Work", "Clean");
 }
